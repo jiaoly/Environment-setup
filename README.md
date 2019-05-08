@@ -29,8 +29,17 @@ Machine-learning environment setup on PC and Jetson development kit
 ![](http://images.ncnynl.com/ros/2019/JB3-Assy_12-3.JPG)
 
 摄像头类型为：支持MIPI-CSI的摄像头，如树莓派v2摄像头或树莓派v2广角摄像头。Jetson官方文档指出，Jetson设备只支持IMX219方案的摄像头
+金手指一段向着散热器
 
-
+检查端口：
+```
+$ ls /dev/video0 
+/dev/video0
+```
+启动摄像头：
+```
+gst-launch-1.0 nvarguscamerasrc ! 'video/x-raw(memory:NVMM),width=3820, height=2464, framerate=21/1, format=NV12' ! nvvidconv flip-method=0 ! 'video/x-raw,width=960, height=616' ! nvvidconv ! nvegltransform ! nveglglessink -e
+```
 ## 远程登录
 ### 方法1 使用SSH命令行登录
 使用ifconfig查看网卡信息并ping该地址
