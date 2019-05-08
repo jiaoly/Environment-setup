@@ -144,7 +144,8 @@ sudo chmod a+x mnistCUDNN # 为可执行文件添加执行权限
 ```
 ## 安装Tensorflow GPU版
 
-因为Jetson Nano中已经安装了Python3.6版本，所以安装pip还是比较简单的
+### 使用pip进行安装
+因为Jetson Nano中已经安装了Python3.6版本，所以安装pip还是比较简单的
 ```
 sudo apt-get install python3-pip python3-dev
 ```
@@ -170,3 +171,146 @@ if __name__ == '__main__':
 ~$ pip3 -V
 pip 19.0.3 from /home/droneyee/.local/lib/python3.6/site-packages/pip (python 3.6)
 ```
+### 安装相关包
+```
+sudo apt-get install python3-numpy   
+sudo apt-get install python3-scipy
+sudo apt-get install python3-pandas
+sudo apt-get install python3-matplotlib
+sudo apt-get install python3-sklearn
+```
+
+### 安装TensorFlow GPU版
+（1）确认CUDA已经被正常安装
+```
+nvcc -V
+```
+如果能看到CUDA版本号，即为正确安装
+（2）安装所需要的包
+```
+sudo apt-get install python3-pip libhdf5-serial-dev hdf5-tools
+```
+（3）安装TensorFlow GPU版本 
+```
+pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v42 tensorflow-gpu==1.13.1+nv1
+```
+
+（4）安装Keras
+```
+sudo pip3 install keras
+```
+安装完成后，进入python3，检查一下安装成果，import keras时，下方提示using TensorFlow backend,就证明Keras安装成功并使用TensorFlow作为backend
+
+测试TensorFlow
+``` python
+import tensorflow as tf
+import numpy as np
+import matplotlib.pyplot as plt
+ 
+x_data = np.linspace(-0.5, 0.5, 200)[:, np.newaxis]
+noise = np.random.normal(0, 0.02, x_data.shape)
+y_data = np.square(x_data) + noise
+ 
+x = tf.placeholder(tf.float32, [None, 1])
+y = tf.placeholder(tf.float32, [None, 1])
+ 
+# 输入层一个神经元，输出层一个神经元，中间10个
+# 第一层
+Weights_L1 = tf.Variable(tf.random.normal([1, 10]))
+Biases_L1 = tf.Variable(tf.zeros([1, 10]))
+Wx_plus_b_L1 = tf.matmul(x, Weights_L1) + Biases_L1
+L1 = tf.nn.tanh(Wx_plus_b_L1)
+ 
+# 第二层
+Weights_L2 = tf.Variable(tf.random.normal([10, 1]))
+Biases_L2 = tf.Variable(tf.zeros([1, 1]))
+Wx_plus_b_L2 = tf.matmul(L1, Weights_L2) + Biases_L2
+pred = tf.nn.tanh(Wx_plus_b_L2)
+ 
+# 损失函数
+loss = tf.reduce_mean(tf.square(y - pred))
+ 
+# 训练
+train = tf.train.GradientDescentOptimizer(0.1).minimize(loss)
+ 
+with tf.Session() as sess:
+    sess.run(tf.global_variables_initializer())
+    for i in range(2000):
+        sess.run(train, feed_dict={x: x_data, y: y_data})
+        print("第{0}次，loss = {1}".format(i, sess.run(loss,feed_dict={x: x_data, y: y_data})))
+    pred_vaule = sess.run(pred, feed_dict={x: x_data})
+    plt.figure()
+    plt.scatter(x_data, y_data)
+    plt.plot(x_data, pred_vaule, 'r-', lw=5)
+    plt.show()
+```
+
+## 测试YoloV3
+
+yoloV3也是一个物品检测的小程序，而且搭建起来比较简单。这里要申明，本文用的是yoloV3的tiny版，正式版和tiny版安装的方法都是一样的，只是运行时的配置文件和权重文件不一样。我曾经试图跑正式版，但是跑不起来，基本上到第二次卷积就挂掉了，毕竟nano只有4G内存。
+
+参见官方网站 https://pjreddie.com/darknet/yolo/
+
+1.安装CUDA，OpenCV，cuDNN （已配置好）
+
+2.下载
+```
+git clone https://github.com/pjreddie/darknet.git
+```
+3.配置
+```
+cd darknet
+sudo vim Makefile   #修改Makefile
+```
+4.将Makefile的前三行修改一下
+```
+GPU=1
+CUDNN=1
+OPENCV=1
+```
+5.编译
+```
+make -j4
+```
+6.下载权重文件，这里直接下载tiny版的权重文件
+```
+wget https://pjreddie.com/media/files/yolov3-tiny.weights
+```
+7.测试
+```Bash
+./darknet detect cfg/yolov3-tiny.cfg yolov3-tiny.weights data/dog.jpg
+layer     filters    size              input                output
+    0 conv     16  3 x 3 / 1   416 x 416 x   3   ->   416 x 416 x  16  0.150 BFLOPs
+    1 max          2 x 2 / 2   416 x 416 x  16   ->   208 x 208 x  16
+    2 conv     32  3 x 3 / 1   208 x 208 x  16   ->   208 x 208 x  32  0.399 BFLOPs
+    3 max          2 x 2 / 2   208 x 208 x  32   ->   104 x 104 x  32
+    4 conv     64  3 x 3 / 1   104 x 104 x  32   ->   104 x 104 x  64  0.399 BFLOPs
+    5 max          2 x 2 / 2   104 x 104 x  64   ->    52 x  52 x  64
+    6 conv    128  3 x 3 / 1    52 x  52 x  64   ->    52 x  52 x 128  0.399 BFLOPs
+    7 max          2 x 2 / 2    52 x  52 x 128   ->    26 x  26 x 128
+    8 conv    256  3 x 3 / 1    26 x  26 x 128   ->    26 x  26 x 256  0.399 BFLOPs
+    9 max          2 x 2 / 2    26 x  26 x 256   ->    13 x  13 x 256
+   10 conv    512  3 x 3 / 1    13 x  13 x 256   ->    13 x  13 x 512  0.399 BFLOPs
+   11 max          2 x 2 / 1    13 x  13 x 512   ->    13 x  13 x 512
+   12 conv   1024  3 x 3 / 1    13 x  13 x 512   ->    13 x  13 x1024  1.595 BFLOPs
+   13 conv    256  1 x 1 / 1    13 x  13 x1024   ->    13 x  13 x 256  0.089 BFLOPs
+   14 conv    512  3 x 3 / 1    13 x  13 x 256   ->    13 x  13 x 512  0.399 BFLOPs
+   15 conv    255  1 x 1 / 1    13 x  13 x 512   ->    13 x  13 x 255  0.044 BFLOPs
+   16 yolo
+   17 route  13
+   18 conv    128  1 x 1 / 1    13 x  13 x 256   ->    13 x  13 x 128  0.011 BFLOPs
+   19 upsample            2x    13 x  13 x 128   ->    26 x  26 x 128
+   20 route  19 8
+   21 conv    256  3 x 3 / 1    26 x  26 x 384   ->    26 x  26 x 256  1.196 BFLOPs
+   22 conv    255  1 x 1 / 1    26 x  26 x 256   ->    26 x  26 x 255  0.088 BFLOPs
+   23 yolo
+Loading weights from yolov3-tiny.weights...Done!
+data/dog.jpg: Predicted in 0.239507 seconds.
+dog: 56%
+car: 52%
+truck: 56%
+car: 62%
+bicycle: 58%
+```
+
+![](https://img-blog.csdnimg.cn/20190418111323859.png)
