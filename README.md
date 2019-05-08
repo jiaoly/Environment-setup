@@ -23,6 +23,14 @@ Machine-learning environment setup on PC and Jetson development kit
 
 ![](https://developer.nvidia.com/sites/default/files/akamai/embedded/images/jetsonNano/gettingStarted/Jetbot_animation_500x282_2.gif)  
 
+## 增加无线网卡
+
+## 增加摄像头
+![](http://images.ncnynl.com/ros/2019/JB3-Assy_12-3.JPG)
+
+摄像头类型为：支持MIPI-CSI的摄像头，如树莓派v2摄像头或树莓派v2广角摄像头。Jetson官方文档指出，Jetson设备只支持IMX219方案的摄像头
+
+
 ## 远程登录
 ### 方法1 使用SSH命令行登录
 使用ifconfig查看网卡信息并ping该地址
@@ -314,3 +322,30 @@ bicycle: 58%
 ```
 
 ![](https://img-blog.csdnimg.cn/20190418111323859.png)
+
+## 调试OpenCV调用摄像头
+
+
+新建CVtest.py 文件，测试代码
+```python
+# coding=utf-8
+import cv2 as cv
+def video_demo():
+# 自动配置第一个USB摄像头
+    capture=cv.VideoCapture(1)
+    while(True):
+        ref,frame=capture.read()
+
+        cv.imshow("0",frame)
+# 按Esc退出
+        c= cv.waitKey(30) & 0xff
+        if c==27:
+            capture.release()
+            break
+
+video_demo()
+cv.waitKey()
+cv.destroyAllWindows()
+```
+
+## 
