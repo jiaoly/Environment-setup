@@ -331,11 +331,46 @@ bicycle: 58%
 ```
 
 ![](https://img-blog.csdnimg.cn/20190418111323859.png)
+
 8、使用摄像头进行识别
 ```
 ./darknet detector demo cfg/coco.data cfg/yolov3-tiny.cfg yolov3-tiny.weights
 ```
 (Nano只能使用tiny模型否则会出现killed中断现象)
+
+9、训练数据集VOC
+
+下载PASCAL VOC 数据集，并解压至/scripts的VOCdevkit子文件夹下
+```Bash
+wget https://pjreddie.com/media/files/VOCtrainval_11-May-2012.tar
+wget https://pjreddie.com/media/files/VOCtrainval_06-Nov-2007.tar
+wget https://pjreddie.com/media/files/VOCtest_06-Nov-2007.tar
+tar xf VOCtrainval_11-May-2012.tar
+tar xf VOCtrainval_06-Nov-2007.tar
+tar xf VOCtest_06-Nov-2007.tar
+```
+使用已标记好的标签，也可用自己数据集以该格式手动标注
+```
+wget https://pjreddie.com/media/files/voc_label.py
+python3 voc_label.py
+```
+修改cfg/voc.data文件
+```
+  1 classes= 20
+  2 train  = <path-to-voc>/train.txt
+  3 valid  = <path-to-voc>2007_test.txt
+  4 names = data/voc.names
+  5 backup = backup
+```
+下载预训练的权重文件
+```
+wget https://pjreddie.com/media/files/darknet53.conv.74
+```
+开始训练
+```
+./darknet detector train cfg/voc.data cfg/yolov3-voc.cfg darknet53.conv.74
+```
+
 
 ## 调试OpenCV调用摄像头
 
