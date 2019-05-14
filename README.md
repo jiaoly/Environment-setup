@@ -331,6 +331,11 @@ bicycle: 58%
 ```
 
 ![](https://img-blog.csdnimg.cn/20190418111323859.png)
+8、使用摄像头进行识别
+```
+./darknet detector demo cfg/coco.data cfg/yolov3-tiny.cfg yolov3-tiny.weights
+```
+(Nano只能使用tiny模型否则会出现killed中断现象)
 
 ## 调试OpenCV调用摄像头
 
