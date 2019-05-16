@@ -397,4 +397,21 @@ cv.waitKey()
 cv.destroyAllWindows()
 ```
 
-## 
+## 搭建二维码识别系统
+
+源代码 https://github.com/goodrobots/vision_landing
+
+准备：由于TX2/nano预装了Opencv，已经满足环境要求
+
+安装Aruco工具
+```
+git clone https://github.com/fnoop/aruco
+git checkout 2.0.20-git-fixed
+cd aruco
+cmake . && make && sudo make install
+```
+安装Dronekit
+```
+sudo pip install dronekit
+```
+打印二维码
