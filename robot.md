@@ -1,4 +1,6 @@
-## 步骤1：Flash JetBot镜像到SD卡上
+# 基本设置
+
+## 步骤1：烧录JetBot镜像到SD卡上
 
 下载JetBot SD卡镜像 jetbot_image_v0p3p0.zip
 
@@ -50,3 +52,17 @@
 单击以打开Jupyter Lab启动器
 
 ![](http://images.ncnynl.com/ros/2019/JL01_Basic-Motion.png) 
+
+## 步骤5 测试基本动作
+
+打开~/Notebooks/basic_motion/
+
+打开basic_motion.ipynb， 即python的在线编译环境
+
+![](http://images.ncnynl.com/ros/2019/JL01_Basic-Motion.png) 
+
+按照步骤运行，把鼠标定位到某一代码块，按ctrl+enter运行
+
+# 
+
+
