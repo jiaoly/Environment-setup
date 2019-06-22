@@ -131,8 +131,34 @@
 
 打开并跟随live_demo.ipynb笔记操作
 
-开始谨慎，给JetBot足够的空间来移动。
+给JetBot足够的空间来移动。
 
 ## 可参考官方视频
 
 http://www.youtube.com/watch?v=6cLk9TSgFSw
+
+# 目标追踪
+
+![](http://images.ncnynl.com/ros/2019/JL04_Object-Following.png)
+
+通过导航到http://<jetbot_ip_address>:8888连接到您的机器人
+
+通过选择Kernel -> Shutdown All Kernels...关闭所有其他正在运行的笔记本...
+
+导航到~/Notebooks/object_following/
+
+将预先训练好的ssd_mobilenet_v2_coco.engine模型上传到此文件夹
+
+还要确保示例3中的防碰撞模型在~/Notebooks/collision_avoidance中
+
+打开并跟随live_demo.ipynb笔记操作
+
+收集更多的防撞数据
+
+尝试不同的神经网络架构（torchvision包有很多！）
+
+修改新任务的碰撞避免示例
+
+参考视频：
+
+http://www.youtube.com/watch?v=MBUEbU9Q6wg
