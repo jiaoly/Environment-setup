@@ -63,6 +63,76 @@
 
 按照步骤运行，把鼠标定位到某一代码块，按ctrl+enter运行
 
-# 
+# 自主避障
 
+## 步骤1 在JetBot上收集数据
 
+使用具有广角附件的Raspberry Pi V2相机，在有限的数据集上训练该模型。
+
+通过导航到http://<jetbot_ip_address>:8888连接到您的机器人
+
+使用默认密码jetbot登录
+
+通过选择Kernel -> Shutdown All Kernels...来关闭所有其他正在运行的笔记本...
+
+导航到~/Notebooks/collision_avoidance/
+
+打开并跟随data_collection.ipynb笔记操作
+
+![](http://images.ncnynl.com/ros/2019/JL03a_Data-Collection.png)
+
+在Web浏览器中导航到https://courses.nvidia.com/dli-event
+
+输入事件代码DLI_Jet_Demo
+
+如果您尚未登录，请登录您的NVIDIA开发者帐户
+
+选择查看View Course -> Course -> Click here to begin -> Start
+
+等待几分钟，以便云培训机器进行设置
+
+选择Launch Task启动Jupyter Lab
+
+在Jupyter Lab选项卡中，导航到~/collision_avoidance
+
+打开并跟随train_model.ipynb笔记操作
+
+## 步骤2 在云上训练神经网络
+
+![](http://images.ncnynl.com/ros/2019/JL03b_Training.png)
+
+在Web浏览器中导航到https://courses.nvidia.com/dli-event
+
+输入事件代码DLI_Jet_Demo
+
+如果您尚未登录，请登录您的NVIDIA开发者帐户
+
+选择查看View Course -> Course -> Click here to begin -> Start
+
+等待几分钟，以便云培训机器进行设置
+
+选择Launch Task启动Jupyter Lab
+
+在Jupyter Lab选项卡中，导航到~/collision_avoidance
+
+打开并跟随train_model.ipynb笔记操作
+
+## 步骤3 在JetBot上运行实时演示
+
+![](http://images.ncnynl.com/ros/2019/JL03c_Live-demo.png)
+
+通过导航到http://<jetbot_ip_address>:8888连接回机器人
+
+使用默认密码jetbot登录
+
+通过选择Kernel -> Shutdown All Kernels...来关闭所有其他正在运行的笔记本...
+
+导航到~/Notebooks/collision_avoidance
+
+打开并跟随live_demo.ipynb笔记操作
+
+开始谨慎，给JetBot足够的空间来移动。
+
+## 可参考官方视频
+
+http://www.youtube.com/watch?v=6cLk9TSgFSw
